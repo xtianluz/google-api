@@ -4,6 +4,7 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.material.Card
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.OutlinedTextField
+import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -18,13 +19,15 @@ import com.example.googleapi.screen.booksearch.DataSamples.SampleImageOne
 import com.example.googleapi.ui.theme.GoogleApiTheme
 
 @Composable
-fun BookSearchScreen(searchViewModel: BookSearchViewModel = viewModel()){
+fun BookSearchScreen(){
     Column {
+
+        val searchViewModel: BookSearchViewModel = viewModel()
         SearchBar(
             userInput = searchViewModel.userInput,
             onUserInputChange = { searchViewModel.updateUserInput(it) }
         )
-        SearchResult()
+        TextResult(resultText = searchViewModel.searchUiState)
     }
 }
 
@@ -50,12 +53,12 @@ fun SearchBar(
 }
 
 @Composable
-fun SearchResult(){
-    BookThumbnail()
+fun SearchResult(bookThumbnail: String?){
+    BookThumbnail(bookThumbnail = bookThumbnail)
 }
 
 @Composable
-fun BookThumbnail(){
+fun BookThumbnail(bookThumbnail: String?){
     Card(
         modifier = Modifier
             .fillMaxWidth()
@@ -64,7 +67,7 @@ fun BookThumbnail(){
         elevation = 16.dp
     ){
         AsyncImage(
-            model = SampleImageOne,
+            model = bookThumbnail,
             contentDescription = null,
             contentScale = ContentScale.FillBounds,
             error = painterResource(id = R.drawable.ic_connection_error),
@@ -74,6 +77,11 @@ fun BookThumbnail(){
                 .padding(16.dp)
         )
     }
+}
+
+@Composable
+fun TextResult(resultText: String){
+    Text(text = resultText)
 }
 
 
