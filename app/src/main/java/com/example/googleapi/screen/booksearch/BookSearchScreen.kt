@@ -19,14 +19,15 @@ import com.example.googleapi.ui.theme.GoogleApiTheme
 
 @Composable
 fun BookSearchScreen(){
+    val searchViewModel: BookSearchViewModel = viewModel()
+    val searchUiState = searchViewModel.searchUiState
     Column {
 
-        val searchViewModel: BookSearchViewModel = viewModel()
-        SearchBar(
-            userInput = searchViewModel.userInput,
-            onUserInputChange = { searchViewModel.updateUserInput(it) }
-        )
-        TextResult(resultText = searchViewModel.searchUiState)
+        when(searchUiState){
+            is BookSearchUiState.Success -> BookThumbnail(bookThumbnail = searchUiState.searchItems.volumeInfo?.imageLinks?.thumbnail)
+            is BookSearchUiState.Loading ->  TextResult(resultText = "Loading")
+            is BookSearchUiState.Error -> TextResult(resultText = "Error")
+        }
     }
 }
 

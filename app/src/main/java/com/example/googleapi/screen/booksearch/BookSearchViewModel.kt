@@ -1,7 +1,6 @@
 package com.example.googleapi.screen.booksearch
 
-import android.media.Image
-import androidx.compose.runtime.MutableState
+
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
@@ -9,11 +8,17 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import coil.network.HttpException
 import kotlinx.coroutines.launch
-import retrofit2.Response
+import kotlinx.serialization.json.Json
+
+sealed interface BookSearchUiState {
+    data class Success(val searchItems: Items) : BookSearchUiState
+    object Error: BookSearchUiState
+    object  Loading: BookSearchUiState
+}
 
 class BookSearchViewModel : ViewModel(){
 
-    var searchUiState: String by mutableStateOf(searchUiState)
+    var searchUiState: BookSearchUiState by mutableStateOf(BookSearchUiState.Loading)
         private set
 
     var userInput by mutableStateOf("")
@@ -29,11 +34,12 @@ class BookSearchViewModel : ViewModel(){
 
     private fun getSearchItems(){
         viewModelScope.launch {
-           searchUiState = try{
+            searchUiState =
+            try{
                 val result = SearchApi.retrofitService.getItems()
-                result.items
+                BookSearchUiState.Success(result)
             } catch (e: HttpException){
-                "Error"
+                BookSearchUiState.Error
             }
         }
     }
