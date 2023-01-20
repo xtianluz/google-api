@@ -15,7 +15,6 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import coil.compose.AsyncImage
 import com.example.googleapi.R
-import com.example.googleapi.screen.booksearch.DataSamples.SampleImageOne
 import com.example.googleapi.ui.theme.GoogleApiTheme
 
 @Composable
