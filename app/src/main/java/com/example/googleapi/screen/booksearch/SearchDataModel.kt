@@ -5,18 +5,20 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 data class SearchDataModel(
-    val kind: String,
-    val totalItems: Int,
-    val items: List<Items>? = null
+//    val kind: String,
+//    val totalItems: Int,
+    @SerialName("items")
+    val items: List<Items>?
 )
 
 @Serializable
 data class Items(
 //    val kind: String? = null,
-    val id: String? = null,
+//    val id: String? = null,
 //    val etag: String? = null,
 //    val selfLink: String? = null,
-    val volumeInfo: VolumeInfo? = null,
+    @SerialName("volumeInfo")
+    val volumeInfo: VolumeInfo?,
 //    val saleInfo: SaleInfo? = null,
 //    val accessInfo: AccessInfo? = null,
 //    val searchInfo: SearchInfo? = null
@@ -41,7 +43,8 @@ data class VolumeInfo(
 //    val allowAnonLogging: Boolean? = null,
 //    val contentVersion: String? = null,
 //    val panelizationSummary: PanelizationSummary? = null,
-    val imageLinks: ImageLinks? = null,
+    @SerialName("imageLinks")
+    val imageLinks: ImageLinks?,
 //    val language: String? = null,
 //    val previewLink: String? = null,
 //    val infoLink: String? = null,
@@ -68,8 +71,10 @@ data class PanelizationSummary(
 
 @Serializable
 data class ImageLinks(
-    val smallThumbnail: String? = null,
-    val thumbnail: String? = null
+    @SerialName("smallThumbnail")
+    val smallThumbnail: String?,
+    @SerialName("thumbnail")
+    val thumbnail: String?
 )
 
 ///////////////////////////////////////////////// SALE INFO

@@ -24,7 +24,7 @@ fun BookSearchScreen(){
     Column {
 
         when(searchUiState){
-            is BookSearchUiState.Success -> BookThumbnail(bookThumbnail = searchUiState.searchItems.volumeInfo?.imageLinks?.thumbnail)
+            is BookSearchUiState.Success -> BookThumbnail(bookThumbnail = searchUiState.searchItems.items?.first()?.volumeInfo?.imageLinks?.smallThumbnail)
             is BookSearchUiState.Loading ->  TextResult(resultText = "Loading")
             is BookSearchUiState.Error -> TextResult(resultText = "Error")
         }

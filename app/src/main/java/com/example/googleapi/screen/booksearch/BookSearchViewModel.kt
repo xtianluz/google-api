@@ -11,7 +11,7 @@ import kotlinx.coroutines.launch
 import kotlinx.serialization.json.Json
 
 sealed interface BookSearchUiState {
-    data class Success(val searchItems: Items) : BookSearchUiState
+    data class Success(val searchItems: SearchDataModel) : BookSearchUiState
     object Error: BookSearchUiState
     object  Loading: BookSearchUiState
 }

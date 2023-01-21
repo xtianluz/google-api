@@ -30,7 +30,7 @@ private val retrofit = Retrofit.Builder()
 
 interface GoogleApiService {
     @GET("?q=ceciro")
-    suspend fun getItems() : Items
+    suspend fun getItems() : SearchDataModel
 }
 
 object SearchApi {
