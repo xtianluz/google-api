@@ -8,10 +8,9 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import coil.network.HttpException
 import kotlinx.coroutines.launch
-import kotlinx.serialization.json.Json
 
 sealed interface BookSearchUiState {
-    data class Success(val searchItems: SearchDataModel) : BookSearchUiState
+    data class Success(val searchItems: String) : BookSearchUiState
     object Error: BookSearchUiState
     object  Loading: BookSearchUiState
 }
@@ -37,7 +36,9 @@ class BookSearchViewModel : ViewModel(){
             searchUiState =
             try{
                 val result = SearchApi.retrofitService.getItems()
-                BookSearchUiState.Success(result) 
+                val imageLink = result.items?.first()?.volumeInfo?.imageLinks?.thumbnail
+                val updatedLink = imageLink?.replace("http", "https")
+                BookSearchUiState.Success(updatedLink!!)
             } catch (e: HttpException){
                 BookSearchUiState.Error
             }

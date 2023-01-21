@@ -24,7 +24,7 @@ fun BookSearchScreen(){
     Column {
 
         when(searchUiState){
-            is BookSearchUiState.Success -> BookThumbnail(bookThumbnail = searchUiState.searchItems.items?.first()?.volumeInfo?.imageLinks?.smallThumbnail)
+            is BookSearchUiState.Success -> BookThumbnail(bookThumbnail = searchUiState.searchItems)
             is BookSearchUiState.Loading ->  TextResult(resultText = "Loading")
             is BookSearchUiState.Error -> TextResult(resultText = "Error")
         }
@@ -62,14 +62,14 @@ fun BookThumbnail(bookThumbnail: String?){
     Card(
         modifier = Modifier
             .fillMaxWidth()
-            .height(360.dp)
+            .height(240.dp)
             .padding(16.dp),
         elevation = 16.dp
     ){
         AsyncImage(
             model = bookThumbnail,
             contentDescription = null,
-            contentScale = ContentScale.FillBounds,
+            contentScale = ContentScale.Fit,
             error = painterResource(id = R.drawable.ic_connection_error),
             placeholder = painterResource(id = R.drawable.ic_broken_image),
             modifier = Modifier
