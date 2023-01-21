@@ -37,7 +37,7 @@ class BookSearchViewModel : ViewModel(){
             searchUiState =
             try{
                 val result = SearchApi.retrofitService.getItems()
-                BookSearchUiState.Success(result)
+                BookSearchUiState.Success(result) 
             } catch (e: HttpException){
                 BookSearchUiState.Error
             }
