@@ -12,8 +12,6 @@ import androidx.compose.runtime.setValue
 
 
 fun main(){
-
-
     runBlocking {
         launch{
             try{
