@@ -32,14 +32,14 @@ private val retrofit = Retrofit.Builder()
     .build()
 
 interface GoogleApiService {
-    @GET("?q=ceciro")
+    @GET("volumes/?q=ceciro")
     suspend fun getItems() : SearchDataModel
 
     @GET("volumes/")
     suspend fun doSearch(@Query("q") input: String) : Response<SearchDataModel>
 
     @GET("volumes/")
-    suspend fun getThumbnail(@QueryName(encoded = true) input: String) : Response<SearchDataModel>
+    suspend fun getThumbnail(@Query("q") input: String) : Response<SearchDataModel>
 }
 
 object SearchApi {
