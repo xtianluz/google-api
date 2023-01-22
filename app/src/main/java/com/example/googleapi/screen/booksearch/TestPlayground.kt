@@ -11,8 +11,6 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 
 
-
-
 fun main(){
 
 
@@ -46,7 +44,7 @@ suspend fun getList(){
     itemsInfo?.forEach { i -> println(i.volumeInfo?.imageLinks?.thumbnail) }
 
     itemsInfo?.forEach { i -> i.volumeInfo?.imageLinks?.thumbnail?.let { thumbnailList.add(it) } }
-    
+
     println(thumbnailList)
 }
 
