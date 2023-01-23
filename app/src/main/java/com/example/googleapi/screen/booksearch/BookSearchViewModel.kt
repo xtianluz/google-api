@@ -9,13 +9,17 @@ import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import coil.network.HttpException
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import okhttp3.Dispatcher
 
 sealed interface BookSearchUiState {
     data class Success(val searchedItems: List<String>) : BookSearchUiState
     object Error: BookSearchUiState
     object  Loading: BookSearchUiState
 }
+
+
 
 class BookSearchViewModel : ViewModel(){
 
@@ -25,21 +29,21 @@ class BookSearchViewModel : ViewModel(){
     var userInput by mutableStateOf("")
         private set
 
-
-    private var thumbnailList: MutableList<String> = mutableListOf()
+    var thumbnailList: MutableList<String> = mutableListOf()
 
     fun updateUserInput(newUserInput: String){
         userInput = newUserInput
-        thumbnailList.clear()
     }
 
     fun getSearch(){
+        thumbnailList.clear()
         getSearchItems()
     }
 
 
     private fun getSearchItems(){
-        viewModelScope.launch {
+        searchUiState = BookSearchUiState.Loading
+        viewModelScope.launch(Dispatchers.IO) {
             try{
                 val result = SearchApi.retrofitService.getItems(userInput)
                 val items = result.items

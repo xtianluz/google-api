@@ -5,15 +5,21 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
+import androidx.compose.foundation.text.KeyboardActions
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.input.key.onKeyEvent
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.input.ImeAction
+import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
@@ -29,10 +35,11 @@ fun BookSearchScreen(){
         SearchBar(
             userInput = searchViewModel.userInput,
             onUserInputChange = { searchViewModel.updateUserInput(it) },
-            onSearch = { searchViewModel.getSearch() }
+            onSearch = { searchViewModel.getSearch() },
+            onKeyboardPress = { searchViewModel.getSearch() }
         )
         when(searchUiState){
-            is BookSearchUiState.Success -> ThumbnailsGrid(thumbnails = searchUiState.searchedItems)
+            is BookSearchUiState.Success -> ThumbnailsGrid(thumbnails = searchViewModel.thumbnailList)
             is BookSearchUiState.Loading ->  LoadingScreen()
             is BookSearchUiState.Error -> ErrorScreen()
         }
@@ -43,7 +50,8 @@ fun BookSearchScreen(){
 fun SearchBar(
     userInput: String,
     onUserInputChange: (String) -> Unit,
-    onSearch: () -> Unit
+    onSearch: () -> Unit,
+    onKeyboardPress: () -> Unit,
 ){
     Box(
         contentAlignment = Alignment.TopCenter,
@@ -64,7 +72,16 @@ fun SearchBar(
                 IconButton(onClick = onSearch) {
                     Icon(Icons.Filled.Search, contentDescription = "Search")
                 }
-            }
+            },
+            keyboardOptions = KeyboardOptions(
+                keyboardType = KeyboardType.Text,
+                imeAction = ImeAction.Search
+            ),
+            keyboardActions = KeyboardActions(
+                onSearch = {
+
+                }
+            )
         )
     }
 }
@@ -112,7 +129,8 @@ fun LoadingScreen(modifier: Modifier = Modifier) {
     ) {
         Image(
             painter = painterResource(R.drawable.loading_img),
-            contentDescription = stringResource(R.string.loading)
+            contentDescription = stringResource(R.string.loading),
+            modifier = Modifier.size(300.dp)
         )
     }
 }
@@ -136,6 +154,6 @@ fun ErrorScreen(modifier: Modifier = Modifier) {
 @Composable
 fun DefaultPreview(){
     GoogleApiTheme() {
-        SearchBar(userInput = "Placeolder", onUserInputChange = { } ,onSearch = { })
+
     }
 }
