@@ -47,7 +47,7 @@ suspend fun getList(){
 }
 
 suspend fun getImage(){
-    val result = SearchApi.retrofitService.getItems()
+    val result = SearchApi.retrofitService.getItems("ceciro")
     val imageLink = result.items?.first()?.volumeInfo?.imageLinks?.thumbnail
     val updatedLink = imageLink?.replace("http", "https")
     println(updatedLink)

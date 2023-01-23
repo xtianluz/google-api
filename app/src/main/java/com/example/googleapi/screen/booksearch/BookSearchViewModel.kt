@@ -28,24 +28,26 @@ class BookSearchViewModel : ViewModel(){
 
     private var thumbnailList: MutableList<String> = mutableListOf()
 
-    fun updateUserInput(userNewInput: String){
-        userInput = userNewInput
+    fun updateUserInput(newUserInput: String){
+        userInput = newUserInput
+        thumbnailList.clear()
     }
 
-    init {
+    fun getSearch(){
         getSearchItems()
     }
 
+
     private fun getSearchItems(){
         viewModelScope.launch {
-            searchUiState =
             try{
-                val result = SearchApi.retrofitService.getItems()
+                val result = SearchApi.retrofitService.getItems(userInput)
                 val items = result.items
                 items?.forEach { i -> i.volumeInfo?.imageLinks?.thumbnail?.replace("http", "https")?.let { thumbnailList.add(it)} }
-                BookSearchUiState.Success(thumbnailList)
+                searchUiState = BookSearchUiState.Success(thumbnailList)
+
             } catch (e: HttpException){
-                BookSearchUiState.Error
+                searchUiState = BookSearchUiState.Error
             }
         }
     }

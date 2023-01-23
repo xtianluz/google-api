@@ -5,10 +5,9 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
-import androidx.compose.material.Card
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.OutlinedTextField
-import androidx.compose.material.Text
+import androidx.compose.material.*
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Search
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -27,7 +26,11 @@ fun BookSearchScreen(){
     val searchViewModel: BookSearchViewModel = viewModel()
     val searchUiState = searchViewModel.searchUiState
     Column {
-        SearchBar(userInput = searchViewModel.userInput, onUserInputChange = { searchViewModel.updateUserInput(it) } )
+        SearchBar(
+            userInput = searchViewModel.userInput,
+            onUserInputChange = { searchViewModel.updateUserInput(it) },
+            onSearch = { searchViewModel.getSearch() }
+        )
         when(searchUiState){
             is BookSearchUiState.Success -> ThumbnailsGrid(thumbnails = searchUiState.searchedItems)
             is BookSearchUiState.Loading ->  LoadingScreen()
@@ -40,6 +43,7 @@ fun BookSearchScreen(){
 fun SearchBar(
     userInput: String,
     onUserInputChange: (String) -> Unit,
+    onSearch: () -> Unit
 ){
     Box(
         contentAlignment = Alignment.TopCenter,
@@ -55,7 +59,12 @@ fun SearchBar(
             onValueChange = onUserInputChange,
             singleLine = true,
             shape = MaterialTheme.shapes.large,
-            textStyle = MaterialTheme.typography.body2
+            textStyle = MaterialTheme.typography.body2,
+            trailingIcon = {
+                IconButton(onClick = onSearch) {
+                    Icon(Icons.Filled.Search, contentDescription = "Search")
+                }
+            }
         )
     }
 }
@@ -87,7 +96,7 @@ fun BookThumbnail(bookThumbnail: String){
             contentDescription = null,
             contentScale = ContentScale.Fit,
             error = painterResource(id = R.drawable.ic_connection_error),
-            placeholder = painterResource(id = R.drawable.ic_broken_image),
+            placeholder = painterResource(id = R.drawable.loading_img),
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(16.dp)
@@ -127,6 +136,6 @@ fun ErrorScreen(modifier: Modifier = Modifier) {
 @Composable
 fun DefaultPreview(){
     GoogleApiTheme() {
-        SearchBar(userInput = "Placeolder", onUserInputChange = { } )
+        SearchBar(userInput = "Placeolder", onUserInputChange = { } ,onSearch = { })
     }
 }

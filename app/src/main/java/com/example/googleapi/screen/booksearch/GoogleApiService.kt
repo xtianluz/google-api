@@ -32,8 +32,8 @@ private val retrofit = Retrofit.Builder()
     .build()
 
 interface GoogleApiService {
-    @GET("volumes/?q=ceciro")
-    suspend fun getItems() : SearchDataModel
+    @GET("volumes/")
+    suspend fun getItems(@Query("q") input: String) : SearchDataModel
 
     @GET("volumes/")
     suspend fun doSearch(@Query("q") input: String) : Response<SearchDataModel>
