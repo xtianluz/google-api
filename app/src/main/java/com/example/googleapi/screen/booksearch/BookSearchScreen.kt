@@ -29,9 +29,9 @@ fun BookSearchScreen(){
     Column {
         SearchBar(userInput = searchViewModel.userInput, onUserInputChange = { searchViewModel.updateUserInput(it) } )
         when(searchUiState){
-            is BookSearchUiState.Success -> BookThumbnail(bookThumbnail = searchUiState.searchItems)
-            is BookSearchUiState.Loading ->  TextResult(resultText = "Loading")
-            is BookSearchUiState.Error -> TextResult(resultText = "Error")
+            is BookSearchUiState.Success -> ThumbnailsGrid(thumbnails = searchUiState.searchedItems)
+            is BookSearchUiState.Loading ->  LoadingScreen()
+            is BookSearchUiState.Error -> ErrorScreen()
         }
     }
 }
@@ -43,7 +43,9 @@ fun SearchBar(
 ){
     Box(
         contentAlignment = Alignment.TopCenter,
-        modifier = Modifier.fillMaxWidth()
+        modifier = Modifier
+            .fillMaxWidth()
+            .height(80.dp)
     ) {
         OutlinedTextField(
             modifier = Modifier
@@ -52,13 +54,14 @@ fun SearchBar(
             value = userInput,
             onValueChange = onUserInputChange,
             singleLine = true,
-            shape = MaterialTheme.shapes.large
+            shape = MaterialTheme.shapes.large,
+            textStyle = MaterialTheme.typography.body2
         )
     }
 }
 
 @Composable
-fun BookshelfGrid(thumbnails: List<String>){
+fun ThumbnailsGrid(thumbnails: List<String>){
     LazyVerticalGrid(
         columns = GridCells.Adaptive(150.dp),
         contentPadding = PaddingValues(6.dp),
@@ -99,7 +102,6 @@ fun LoadingScreen(modifier: Modifier = Modifier) {
         modifier = modifier.fillMaxSize()
     ) {
         Image(
-            modifier = Modifier.size(200.dp),
             painter = painterResource(R.drawable.loading_img),
             contentDescription = stringResource(R.string.loading)
         )
@@ -107,8 +109,13 @@ fun LoadingScreen(modifier: Modifier = Modifier) {
 }
 
 @Composable
-fun TextResult(resultText: String){
-    Text(text = resultText)
+fun ErrorScreen(modifier: Modifier = Modifier) {
+    Box(
+        contentAlignment = Alignment.Center,
+        modifier = modifier.fillMaxSize()
+    ) {
+        Text(stringResource(R.string.something_went_wrong))
+    }
 }
 
 
