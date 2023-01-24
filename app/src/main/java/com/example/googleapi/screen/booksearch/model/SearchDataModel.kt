@@ -4,20 +4,20 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 data class SearchDataModel(
-    val items: List<Items>
+    val items: List<Items>?
 )
 
 @Serializable
 data class Items(
-    val volumeInfo: VolumeInfo
+    val volumeInfo: VolumeInfo?
 )
 ///////////////////////////////////////////////// VOLUME INFO
 @Serializable
 data class VolumeInfo(
-    val imageLinks: ImageLinks
+    val imageLinks: ImageLinks?
 )
 
 @Serializable
 data class ImageLinks(
-    val thumbnail: String
+    val thumbnail: String?
 )

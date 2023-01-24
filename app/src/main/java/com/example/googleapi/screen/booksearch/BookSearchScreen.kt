@@ -37,7 +37,7 @@ fun BookSearchScreen(searchViewModel: BookSearchViewModel){
             onSearch = { searchViewModel.getSearch() },
         )
         when(searchViewModel.searchUiState){
-            is BookSearchUiState.Success -> ThumbnailsGrid((searchViewModel.searchUiState as BookSearchUiState.Success).searchedItems)
+            is BookSearchUiState.Success -> ThumbnailsGrid(searchViewModel.thumbnailList)
             is BookSearchUiState.Loading ->  LoadingScreen()
             is BookSearchUiState.Error -> ErrorScreen()
         }
