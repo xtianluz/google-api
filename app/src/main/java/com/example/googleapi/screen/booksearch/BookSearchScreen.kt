@@ -30,16 +30,15 @@ import com.example.googleapi.ui.theme.GoogleApiTheme
 @Composable
 fun BookSearchScreen(){
     val searchViewModel: BookSearchViewModel = viewModel()
-    val searchUiState = searchViewModel.searchUiState
+
     Column {
         SearchBar(
             userInput = searchViewModel.userInput,
             onUserInputChange = { searchViewModel.updateUserInput(it) },
             onSearch = { searchViewModel.getSearch() },
-            onKeyboardPress = { searchViewModel.getSearch() }
         )
-        when(searchUiState){
-            is BookSearchUiState.Success -> ThumbnailsGrid(thumbnails = searchViewModel.thumbnailList)
+        when(searchViewModel.searchUiState){
+            is BookSearchUiState.Success -> ThumbnailsGrid(thumbnails = (searchViewModel.searchUiState as BookSearchUiState.Success).searchedItems)
             is BookSearchUiState.Loading ->  LoadingScreen()
             is BookSearchUiState.Error -> ErrorScreen()
         }
@@ -51,7 +50,6 @@ fun SearchBar(
     userInput: String,
     onUserInputChange: (String) -> Unit,
     onSearch: () -> Unit,
-    onKeyboardPress: () -> Unit,
 ){
     Box(
         contentAlignment = Alignment.TopCenter,
