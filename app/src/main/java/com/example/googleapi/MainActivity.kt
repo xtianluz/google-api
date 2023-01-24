@@ -7,6 +7,8 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Surface
 import androidx.compose.ui.Modifier
+import androidx.lifecycle.viewmodel.compose.viewModel
+import com.example.googleapi.screen.booksearch.BookSearchViewModel
 import com.example.googleapi.ui.theme.GoogleApiTheme
 
 class MainActivity : ComponentActivity() {
@@ -19,7 +21,8 @@ class MainActivity : ComponentActivity() {
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colors.background
                 ) {
-                    BookSearchApp()
+                    val searchViewModel: BookSearchViewModel = viewModel(factory = BookSearchViewModel.Factory)
+                    BookSearchApp(searchViewModel)
                 }
             }
         }

@@ -15,9 +15,6 @@ fun main(){
     runBlocking {
         launch{
             try{
-//                getImage()
-//                searchItem()
-//                getThumbnail()
                 getList()
             }catch(e: HttpException){
                 throw Exception("Error")
@@ -29,11 +26,10 @@ suspend fun getList(){
     
     var thumbnailList = mutableListOf<String>()
 
-    
-    val searchResult = SearchApi.retrofitService.getThumbnail("niel")
+    val searchResult = SearchApi.retrofitService.getItems("niel")
     println(searchResult)
 
-    val itemsInfo = searchResult.body()?.items
+    val itemsInfo = searchResult?.items
     println(itemsInfo)
 
     val valueInfo = itemsInfo?.get(0)?.volumeInfo?.imageLinks?.thumbnail
@@ -44,23 +40,4 @@ suspend fun getList(){
     itemsInfo?.forEach { i -> i.volumeInfo?.imageLinks?.thumbnail?.let { thumbnailList.add(it) } }
 
     println(thumbnailList)
-}
-
-suspend fun getImage(){
-    val result = SearchApi.retrofitService.getItems("ceciro")
-    val imageLink = result.items?.first()?.volumeInfo?.imageLinks?.thumbnail
-    val updatedLink = imageLink?.replace("http", "https")
-    println(updatedLink)
-}
-
-suspend fun searchItem(){
-    val searchResult = SearchApi.retrofitService.doSearch("shakespear")
-    val textLink = searchResult.raw()
-    println(textLink)
-}
-
-suspend fun getThumbnail(){
-    val searchResult = SearchApi.retrofitService.getThumbnail("q=niel")
-    val textLink = searchResult.toString()
-    println(textLink)
 }

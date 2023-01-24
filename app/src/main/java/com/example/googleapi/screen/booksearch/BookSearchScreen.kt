@@ -28,8 +28,7 @@ import com.example.googleapi.R
 import com.example.googleapi.ui.theme.GoogleApiTheme
 
 @Composable
-fun BookSearchScreen(){
-    val searchViewModel: BookSearchViewModel = viewModel()
+fun BookSearchScreen(searchViewModel: BookSearchViewModel){
 
     Column {
         SearchBar(
@@ -38,7 +37,7 @@ fun BookSearchScreen(){
             onSearch = { searchViewModel.getSearch() },
         )
         when(searchViewModel.searchUiState){
-            is BookSearchUiState.Success -> ThumbnailsGrid(thumbnails = (searchViewModel.searchUiState as BookSearchUiState.Success).searchedItems)
+            is BookSearchUiState.Success -> ThumbnailsGrid((searchViewModel.searchUiState as BookSearchUiState.Success).searchedItems)
             is BookSearchUiState.Loading ->  LoadingScreen()
             is BookSearchUiState.Error -> ErrorScreen()
         }

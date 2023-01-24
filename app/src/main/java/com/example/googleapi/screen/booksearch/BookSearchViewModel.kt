@@ -7,8 +7,15 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.ViewModelProvider.AndroidViewModelFactory.Companion.APPLICATION_KEY
 import androidx.lifecycle.viewModelScope
+import androidx.lifecycle.viewmodel.initializer
+import androidx.lifecycle.viewmodel.viewModelFactory
 import coil.network.HttpException
+import com.example.googleapi.SearchApplication
+import com.example.googleapi.screen.booksearch.data.SearchRepository
+import com.example.googleapi.screen.booksearch.data.SearchRepositoryInterface
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import okhttp3.Dispatcher
@@ -19,14 +26,12 @@ sealed interface BookSearchUiState {
     object  Loading: BookSearchUiState
 }
 
-
-
-class BookSearchViewModel : ViewModel(){
+class BookSearchViewModel(private val searchRepository: SearchRepositoryInterface) : ViewModel(){
 
     var searchUiState: BookSearchUiState by mutableStateOf(BookSearchUiState.Loading)
         private set
 
-    var userInput by mutableStateOf("")
+    var userInput by mutableStateOf("ceciro")
         private set
 
     var thumbnailList: MutableList<String> = mutableListOf()
@@ -40,18 +45,26 @@ class BookSearchViewModel : ViewModel(){
         getSearchItems()
     }
 
-
     private fun getSearchItems(){
         searchUiState = BookSearchUiState.Loading
-        viewModelScope.launch(Dispatchers.IO) {
-            try{
-                val result = SearchApi.retrofitService.getItems(userInput)
+        viewModelScope.launch() {
+            searchUiState = try{
+                val result = searchRepository.getSearchItems(userInput)
                 val items = result.items
-                items?.forEach { i -> i.volumeInfo?.imageLinks?.thumbnail?.replace("http", "https")?.let { thumbnailList.add(it)} }
-                searchUiState = BookSearchUiState.Success(thumbnailList)
+                items.forEach { i -> i.volumeInfo.imageLinks.thumbnail.replace("http", "https").let { thumbnailList.add(it)} }
+                BookSearchUiState.Success(thumbnailList)
 
             } catch (e: HttpException){
-                searchUiState = BookSearchUiState.Error
+                BookSearchUiState.Error
+            }
+        }
+    }
+    companion object {
+        val Factory: ViewModelProvider.Factory = viewModelFactory {
+            initializer {
+                val application = (this[APPLICATION_KEY] as SearchApplication)
+                val searchRepository = application.container.searchRepository
+                BookSearchViewModel(searchRepository= searchRepository)
             }
         }
     }
