@@ -18,10 +18,11 @@ import com.example.googleapi.screen.data.SearchRepository
 import com.example.googleapi.screen.data.SearchRepositoryClass
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.runBlocking
 import okhttp3.Dispatcher
 
 sealed interface BookSearchUiState {
-    data class Success(val searchedItems: List<String>) : BookSearchUiState
+    data class Success(val searchedItems: MutableList<String>) : BookSearchUiState
     object Error: BookSearchUiState
     object  Loading: BookSearchUiState
 }
@@ -31,18 +32,23 @@ class BookSearchViewModel(private val searchRepository: SearchRepository?) : Vie
     var searchUiState: BookSearchUiState by mutableStateOf(BookSearchUiState.Loading)
         private set
 
-    var userInput by mutableStateOf("")
+    var userInput by mutableStateOf("ceciro")
         private set
 
-    var thumbnailList: MutableList<String> = mutableListOf()
+    private var thumbnailList: MutableList<String> = mutableListOf()
 
     fun updateUserInput(newUserInput: String){
         userInput = newUserInput
     }
 
     fun getSearch(){
-        thumbnailList.clear()
-        getSearchItems()
+//        thumbnailList.clear()
+//        getSearchItems()
+        runBlocking{
+            val result = searchRepository?.getCeciroItem()
+            val items = result?.body()
+            println(items)
+        }
     }
 
     private fun getSearchItems(){
@@ -51,11 +57,24 @@ class BookSearchViewModel(private val searchRepository: SearchRepository?) : Vie
             try{
                 val result = searchRepository?.getSearchItems(userInput)
                 val items = result?.items
-                items?.forEach { i -> i.volumeInfo?.imageLinks?.thumbnail?.replace("http", "https")?.let { thumbnailList.add(it)} }
-                searchUiState = BookSearchUiState.Success(thumbnailList)
+                launch{
+//                    items?.forEach { i ->
+//                        i.volumeInfo?.imageLinks?.thumbnail?.replace(
+//                            "http",
+//                            "https"
+//                        )?.let { thumbnailList.add(it) }
+//                    }
+                    items?.forEach {i ->
+                        i.volumeInfo?.imageLinks?.thumbnail?.let { thumbnailList.add(it) }
+                    }
+                    searchUiState = BookSearchUiState.Success(thumbnailList)
+                }
 
+                println("success success success success success success success")
+                println(userInput)
             } catch (e: HttpException){
                 searchUiState = BookSearchUiState.Error
+                println("error error error error error error error")
             }
         }
     }

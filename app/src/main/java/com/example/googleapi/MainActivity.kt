@@ -16,12 +16,12 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         setContent {
             GoogleApiTheme {
+                val viewModel: BookSearchViewModel = viewModel(factory = BookSearchViewModel.Factory)
                 // A surface container using the 'background' color from the theme
                 Surface(
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colors.background
                 ) {
-                    val viewModel: BookSearchViewModel = viewModel(factory = BookSearchViewModel.Factory)
                     BookSearchApp(viewModel)
                 }
             }

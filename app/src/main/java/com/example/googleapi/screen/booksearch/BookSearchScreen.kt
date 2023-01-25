@@ -28,7 +28,8 @@ import com.example.googleapi.R
 import com.example.googleapi.ui.theme.GoogleApiTheme
 
 @Composable
-fun BookSearchScreen(searchViewModel: BookSearchViewModel = viewModel()){
+fun BookSearchScreen(searchViewModel: BookSearchViewModel){
+
     Column {
         SearchBar(
             userInput = searchViewModel.userInput,
