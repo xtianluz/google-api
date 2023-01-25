@@ -9,6 +9,7 @@ import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import coil.network.HttpException
+import com.example.googleapi.screen.data.SearchRepositoryClass
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import okhttp3.Dispatcher
@@ -18,8 +19,6 @@ sealed interface BookSearchUiState {
     object Error: BookSearchUiState
     object  Loading: BookSearchUiState
 }
-
-
 
 class BookSearchViewModel : ViewModel(){
 
@@ -40,12 +39,12 @@ class BookSearchViewModel : ViewModel(){
         getSearchItems()
     }
 
-
     private fun getSearchItems(){
         searchUiState = BookSearchUiState.Loading
         viewModelScope.launch(Dispatchers.IO) {
             try{
-                val result = SearchApi.retrofitService.getItems(userInput)
+                val searchRepository = SearchRepositoryClass()
+                val result = searchRepository.getSearchItems(userInput)
                 val items = result.items
                 items?.forEach { i -> i.volumeInfo?.imageLinks?.thumbnail?.replace("http", "https")?.let { thumbnailList.add(it)} }
                 searchUiState = BookSearchUiState.Success(thumbnailList)
