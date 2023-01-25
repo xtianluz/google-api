@@ -1,6 +1,6 @@
 package com.example.googleapi.screen.network
 
-import com.example.googleapi.screen.booksearch.GoogleApiService
+
 import com.example.googleapi.screen.booksearch.SearchDataModel
 import com.jakewharton.retrofit2.converter.kotlinx.serialization.asConverterFactory
 import kotlinx.serialization.ExperimentalSerializationApi
@@ -33,7 +33,7 @@ interface SearchApiService {
     suspend fun getItems(@Query("q") input: String) : SearchDataModel
 }
 
-object BookSearchApi {
+object SearchApi {
     val retrofitService: SearchApiService by lazy {
         retrofit.create(SearchApiService::class.java)
     }

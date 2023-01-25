@@ -1,7 +1,7 @@
 package com.example.googleapi.screen.data
 
 import com.example.googleapi.screen.booksearch.SearchDataModel
-import com.example.googleapi.screen.network.BookSearchApi
+import com.example.googleapi.screen.network.SearchApi
 
 interface SearchRepository {
     suspend fun getSearchItems(input: String): SearchDataModel
@@ -9,6 +9,6 @@ interface SearchRepository {
 
 class SearchRepositoryClass : SearchRepository {
     override suspend fun getSearchItems(input: String): SearchDataModel {
-        return BookSearchApi.retrofitService.getItems(input)
+        return SearchApi.retrofitService.getItems(input)
     }
 }
