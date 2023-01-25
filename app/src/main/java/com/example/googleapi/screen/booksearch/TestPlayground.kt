@@ -29,7 +29,7 @@ suspend fun getList(){
     val searchResult = SearchApi.retrofitService.getItems("niel")
     println(searchResult)
 
-    val itemsInfo = searchResult?.items
+    val itemsInfo = searchResult.items
     println(itemsInfo)
 
     val valueInfo = itemsInfo?.get(0)?.volumeInfo?.imageLinks?.thumbnail

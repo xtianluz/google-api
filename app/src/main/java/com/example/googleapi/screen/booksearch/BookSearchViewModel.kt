@@ -50,7 +50,11 @@ class BookSearchViewModel(private val searchRepository: SearchRepositoryInterfac
                 val result = searchRepository?.getSearchItems(userInput)
                 val items = result?.items
 //                items?.forEach { i -> i.volumeInfo?.imageLinks?.thumbnail?.replace("http", "https")}
-                items?.forEach { i -> i.volumeInfo?.imageLinks?.thumbnail?.replace("http","https").let { thumbnailList } }
+                items?.forEach { i -> i.volumeInfo?.imageLinks?.thumbnail?.replace("http","https").let {
+                    if (it != null) {
+                        thumbnailList.add(it)
+                    }
+                } }
 
                  searchUiState = BookSearchUiState.Success(thumbnailList)
 

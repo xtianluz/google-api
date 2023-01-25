@@ -32,5 +32,4 @@ class AppContainer: AppContainerInterface {
     override val searchRepository: SearchRepositoryInterface by lazy {
         SearchRepository(retrofitService)
     }
-
 }
