@@ -7,8 +7,14 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.ViewModelProvider.AndroidViewModelFactory.Companion.APPLICATION_KEY
 import androidx.lifecycle.viewModelScope
+import androidx.lifecycle.viewmodel.initializer
+import androidx.lifecycle.viewmodel.viewModelFactory
 import coil.network.HttpException
+import com.example.googleapi.SearchApplication
+import com.example.googleapi.screen.data.SearchRepository
 import com.example.googleapi.screen.data.SearchRepositoryClass
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -20,7 +26,7 @@ sealed interface BookSearchUiState {
     object  Loading: BookSearchUiState
 }
 
-class BookSearchViewModel : ViewModel(){
+class BookSearchViewModel(private val searchRepository: SearchRepository?) : ViewModel(){
 
     var searchUiState: BookSearchUiState by mutableStateOf(BookSearchUiState.Loading)
         private set
@@ -43,9 +49,8 @@ class BookSearchViewModel : ViewModel(){
         searchUiState = BookSearchUiState.Loading
         viewModelScope.launch(Dispatchers.IO) {
             try{
-                val searchRepository = SearchRepositoryClass()
-                val result = searchRepository.getSearchItems(userInput)
-                val items = result.items
+                val result = searchRepository?.getSearchItems(userInput)
+                val items = result?.items
                 items?.forEach { i -> i.volumeInfo?.imageLinks?.thumbnail?.replace("http", "https")?.let { thumbnailList.add(it)} }
                 searchUiState = BookSearchUiState.Success(thumbnailList)
 
@@ -54,6 +59,13 @@ class BookSearchViewModel : ViewModel(){
             }
         }
     }
+    companion object {
+        val Factory: ViewModelProvider.Factory = viewModelFactory {
+            initializer {
+                val application = (this[APPLICATION_KEY] as? SearchApplication)
+                val searchRepository = application?.container?.searchRepository
+                BookSearchViewModel(searchRepository = searchRepository)
+            }
+        }
+    }
 }
-
-
