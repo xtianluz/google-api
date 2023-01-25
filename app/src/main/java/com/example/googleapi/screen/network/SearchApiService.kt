@@ -1,17 +1,14 @@
-package com.example.googleapi.screen.booksearch
+package com.example.googleapi.screen.network
 
 
+import com.example.googleapi.screen.booksearch.SearchDataModel
 import com.jakewharton.retrofit2.converter.kotlinx.serialization.asConverterFactory
 import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.json.Json
 import okhttp3.MediaType.Companion.toMediaType
-import retrofit2.Response
 import retrofit2.Retrofit
 import retrofit2.http.GET
-import retrofit2.http.Path
 import retrofit2.http.Query
-import retrofit2.http.QueryName
-
 
 private const val GOOGLE_URL = "https://www.googleapis.com/books/v1/"
 
@@ -31,19 +28,13 @@ private val retrofit = Retrofit.Builder()
     .baseUrl(GOOGLE_URL)
     .build()
 
-interface GoogleApiService {
+interface SearchApiService {
     @GET("volumes/")
     suspend fun getItems(@Query("q") input: String) : SearchDataModel
-
-    @GET("volumes/")
-    suspend fun doSearch(@Query("q") input: String) : Response<SearchDataModel>
-
-    @GET("volumes/")
-    suspend fun getThumbnail(@Query("q") input: String) : Response<SearchDataModel>
 }
 
 object SearchApi {
-    val retrofitService: GoogleApiService by lazy {
-        retrofit.create(GoogleApiService::class.java)
+    val retrofitService: SearchApiService by lazy {
+        retrofit.create(SearchApiService::class.java)
     }
 }
