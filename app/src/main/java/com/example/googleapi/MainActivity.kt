@@ -7,6 +7,8 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Surface
 import androidx.compose.ui.Modifier
+import androidx.lifecycle.viewmodel.compose.viewModel
+import com.example.googleapi.screen.booksearch.BookSearchViewModel
 import com.example.googleapi.ui.theme.GoogleApiTheme
 
 class MainActivity : ComponentActivity() {
@@ -14,12 +16,13 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         setContent {
             GoogleApiTheme {
+                val viewModel: BookSearchViewModel = viewModel(factory = BookSearchViewModel.Factory)
                 // A surface container using the 'background' color from the theme
                 Surface(
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colors.background
                 ) {
-                    BookSearchApp()
+                    BookSearchApp(viewModel)
                 }
             }
         }
