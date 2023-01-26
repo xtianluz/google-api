@@ -8,5 +8,5 @@ import com.example.googleapi.screen.booksearch.BookSearchViewModel
 @Composable
 fun BookSearchApp(searchViewModel: BookSearchViewModel){
 
-    BookSearchScreen(searchViewModel)
+    BookSearchScreen(searchViewModel.searchUiState, searchViewModel)
 }
