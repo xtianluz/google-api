@@ -1,9 +1,11 @@
 package com.example.googleapi.screen.booksearch
 
+import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
 @Serializable
 data class SearchDataModel(
+    @SerialName("items")
     val items: List<Items>?
 )
 

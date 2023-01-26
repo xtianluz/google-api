@@ -20,6 +20,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 import okhttp3.Dispatcher
+import java.io.IOException
 
 sealed interface BookSearchUiState {
     data class Success(val searchedItems: MutableList<String>) : BookSearchUiState
@@ -45,8 +46,8 @@ class BookSearchViewModel(private val searchRepository: SearchRepository?) : Vie
 //        thumbnailList.clear()
 //        getSearchItems()
         runBlocking{
-            val result = searchRepository?.getCeciroItem()
-            val items = result?.body()
+            val result = searchRepository?.getSearchItems("ceciro")
+            val items = result?.items
             println(items)
         }
     }
@@ -75,6 +76,8 @@ class BookSearchViewModel(private val searchRepository: SearchRepository?) : Vie
             } catch (e: HttpException){
                 searchUiState = BookSearchUiState.Error
                 println("error error error error error error error")
+            } catch(e: IOException){
+                searchUiState = BookSearchUiState.Error
             }
         }
     }

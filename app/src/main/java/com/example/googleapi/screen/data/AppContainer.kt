@@ -5,6 +5,8 @@ import com.jakewharton.retrofit2.converter.kotlinx.serialization.asConverterFact
 import kotlinx.serialization.json.Json
 import okhttp3.MediaType.Companion.toMediaType
 import retrofit2.Retrofit
+import com.example.googleapi.screen.data.SearchRepositoryClass
+import kotlinx.serialization.ExperimentalSerializationApi
 
 interface AppContainer {
     val searchRepository: SearchRepository
@@ -23,6 +25,7 @@ class AppContainerClass : AppContainer {
 
     private val contentType = "application/json".toMediaType()
 
+    @OptIn(ExperimentalSerializationApi::class)
     private val retrofit = Retrofit.Builder()
         .addConverterFactory(json.asConverterFactory(contentType))
         .baseUrl(GOOGLE_URL)
